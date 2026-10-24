@@ -1,0 +1,5 @@
+variant,trades,hit_rate,avg_hold_days,gross_bp,net_bp,net_usd,sharpe_gross,sharpe_net
+"spec rule (exit 0.5, stop 3.5, 2x half-life)",361,0.039,7.119,92.0,-2202.4,-55060.0,0.486,-6.265
+exit at z = 0,340,0.038,8.021,74.75,-2090.05,-52251.25,0.408,-6.132
+no stop-loss,343,0.047,7.475,152.75,-1992.85,-49821.25,0.754,-5.874
+fixed 10-day hold,258,0.023,10.957,22.25,-1542.55,-38563.75,0.107,-5.207

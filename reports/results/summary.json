@@ -1,0 +1,60 @@
+{
+  "data_first_date": "2018-06-01",
+  "data_last_date": "2026-10-19",
+  "sessions": 2112,
+  "quarterly_rolls": 33,
+  "pc1_share": 0.905,
+  "pc2_share": 0.0729,
+  "pc3_share": 0.015,
+  "pc123_share": 0.9928,
+  "oos": {
+    "trades": 361,
+    "hit_rate": 0.0388,
+    "hit_rate_gross": 0.4626,
+    "avg_gross_bp": 0.2548,
+    "avg_win_bp": 6.5857,
+    "avg_loss_bp": -6.6127,
+    "avg_hold_days": 7.1191,
+    "gross_bp": 92.0,
+    "net_bp": -2202.4,
+    "net_usd": -55060.0,
+    "sharpe_net": -6.2655,
+    "sharpe_gross": 0.486,
+    "max_dd_usd": -55060.0,
+    "days": 1587,
+    "start": "2020-07-01",
+    "end": "2026-10-19"
+  },
+  "insample": {
+    "trades": 245,
+    "hit_rate": 0.0286,
+    "hit_rate_gross": 0.4816,
+    "avg_gross_bp": 0.701,
+    "avg_win_bp": 8.1071,
+    "avg_loss_bp": -6.4546,
+    "avg_hold_days": 10.2204,
+    "gross_bp": 171.75,
+    "net_bp": -1479.45,
+    "net_usd": -36986.25,
+    "sharpe_net": -5.1587,
+    "sharpe_gross": 0.8894,
+    "max_dd_usd": -36986.25,
+    "days": 1587,
+    "start": "2020-07-01",
+    "end": "2026-10-19"
+  },
+  "breakeven_cost_bp_per_contract_side": 0.0359,
+  "curvature_10d_reversion_bp_range": [
+    0.186,
+    1.163
+  ],
+  "curvature_10d_hit_rate_range": [
+    0.528,
+    0.604
+  ],
+  "robustness_positive_net_sharpe": 0,
+  "robustness_cells": 12,
+  "robustness_best_gross_sharpe": 0.765,
+  "screen_date": "2026-10-19",
+  "screen_beyond_entry": 0
+}

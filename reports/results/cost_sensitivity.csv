@@ -1,0 +1,6 @@
+scenario,tick_bp_per_leg,net_usd,sharpe_net,max_dd_usd
+commission only,0.0,-7260.0,-1.451,-7310.0
+package execution (1/4 tick per leg),0.125,-19210.0,-3.397,-19210.0
+half tick per leg,0.25,-31160.0,-4.752,-31160.0
+full tick per leg (default),0.5,-55060.0,-6.265,-55060.0
+gross (no costs at all),,2300.0,0.486,-1075.0

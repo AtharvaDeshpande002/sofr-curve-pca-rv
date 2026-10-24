@@ -1,0 +1,15 @@
+metric,out-of-sample (walk-forward),"in-sample (one fit, all data)"
+trades,361.0,245.0
+hit_rate,0.039,0.029
+hit_rate_gross,0.463,0.482
+avg_gross_bp,0.255,0.701
+avg_win_bp,6.586,8.107
+avg_loss_bp,-6.613,-6.455
+avg_hold_days,7.119,10.22
+gross_bp,92.0,171.75
+net_bp,-2202.4,-1479.45
+net_usd,-55060.0,-36986.25
+sharpe_net,-6.265,-5.159
+sharpe_gross,0.486,0.889
+max_dd_usd,-55060.0,-36986.25
+days,1587.0,1587.0

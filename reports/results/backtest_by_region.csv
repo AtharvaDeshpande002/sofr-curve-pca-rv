@@ -1,0 +1,4 @@
+region,trades,hit_rate,hit_rate_gross,avg_gross_bp,avg_win_bp,avg_loss_bp,avg_hold_days,gross_bp,net_bp,net_usd
+back,122.0,0.0,0.41,0.156,,-6.061,5.492,19.0,-739.4,-18485.0
+belly,145.0,0.021,0.503,0.186,1.533,-6.704,7.048,27.0,-947.4,-23685.0
+front,94.0,0.117,0.468,0.489,7.964,-7.267,9.34,46.0,-515.6,-12890.0
