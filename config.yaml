@@ -1,0 +1,104 @@
+# Every parameter of the project lives here. Nothing is hard-coded in src/ or scripts/.
+# Units: rates and structures in basis points (bp); money in US dollars; time in business days.
+
+paths:
+  raw: data/raw                 # inputs (never committed) - see data/README.md
+  interim: data/interim         # cached intermediate files (never committed)
+  results: reports/results      # small derived tables that ARE committed
+  figures: reports/figures      # static PNG charts used in the README
+  report: reports/report.html   # one interactive Plotly report
+
+data:
+  settles_file: sr3_settles.csv
+  contracts_file: sr3_contracts.csv
+  start_date: "2018-06-01"      # SR3 listed May-2018; skip the first weeks of thin trading
+  end_date: null                # null = last date in the file
+  n_positions: 12               # constant positions 1..12 = the next three years of quarterly contracts
+  min_open_interest: 0          # liquidity filter on every leg (0 = off; OI history is patchy before 2022)
+
+contract:
+  dollars_per_bp: 25.0          # 1 SR3 contract = $25 per bp
+
+structures:
+  # families traded / screened. Weights are on consecutive positions starting at the first leg.
+  families:
+    spread3m: [1, -1]           # front minus back, rate terms
+    fly:      [1, -2, 1]        # front - 2*middle + back
+    dfly:     [1, -3, 3, -1]    # front - 3*second + 3*third - back
+    spread1y: [1, 0, 0, 0, -1]  # position i minus position i+4 (one year apart)
+  regions:                      # curve region by the structure's centre position (for the overlap cap)
+    front: [1, 4]
+    belly: [4.5, 8]
+    back:  [8.5, 12]
+
+pca:
+  n_components: 3
+  window: 252                   # default estimation window (days of daily changes)
+  windows_tested: [126, 252, 504]
+  rolling_step: 21              # re-estimate every month for the "stability over time" charts
+  regime_periods:               # periods for the loading-stability small multiples
+    "2018-19 late hikes / insurance cuts": ["2018-06-01", "2019-12-31"]
+    "2020-21 zero-rate hold": ["2020-04-01", "2021-12-31"]
+    "2022-23 hiking": ["2022-03-16", "2023-07-26"]
+    "2024-25 cutting": ["2024-09-18", "2025-12-31"]
+    "2026": ["2026-01-01", "2026-12-31"]
+
+model:
+  # rich/cheap: regress each structure's level on the PC1..PC3 scores of the curve level
+  z_window: 63                  # z = (residual - its rolling mean) / its rolling std over this many days (spec step 3.2)
+  min_half_life: 1.0            # entry filter: half-life (from the training window) must be inside
+  max_half_life: 40.0           #   this band, otherwise the structure is not traded in that block
+
+backtest:
+  oos_start: "2020-07-01"       # first out-of-sample day (leaves 2 years of history for the 504-day window)
+  block_days: 63                # trade each block of ~3 months with frozen parameters, then refit
+  entry_z: 2.0                  # enter when |z| > entry_z (sell rich, buy cheap)
+  exit_z: 0.5                   # take profit when |z| < exit_z
+  stop_z: 3.5                   # stop-loss when |z| > stop_z in the same direction as entry
+  time_stop_mult: 2.0           # time stop = 2 x half-life (days)
+  max_hold_days: 60             # hard cap on the time stop
+  max_per_region: 2             # overlap control: at most 2 open trades per curve region
+  allow_shared_legs: false      # never hold two trades that share a contract
+  entry_z_tested: [1.5, 2.0, 2.5, 3.0]
+  families: [fly, dfly]         # headline universe: curvature trades (butterflies and double flies)
+  compare_families: [spread3m, spread1y, fly, dfly]   # also run on every family, reported side by side
+  rule_variants:                # alternative exits, all reported (no cherry-picking)
+    "spec rule (exit 0.5, stop 3.5, 2x half-life)": {}
+    "exit at z = 0": {exit_z: 0.0}
+    "no stop-loss": {stop_z: 99.0}
+    "fixed 10-day hold": {exit_z: -99.0, stop_z: 99.0, fixed_hold_days: 10}
+  forward_horizons: [5, 10, 20] # signal-quality study: average reversion h days after a signal
+  z_buckets: [1.5, 2.0, 2.5, 3.5, 9.0]
+  # execution convention: signal at the close of day t, trade at the close (settle) of day t+1
+
+costs:
+  tick_bp_per_leg: 0.5          # 1 tick per leg per side (SR3 tick is 0.5bp outside the front month: conservative)
+  commission_per_contract: 2.50 # USD per contract per side
+  scenarios:                    # cost sensitivity: bp per leg per side (commission always added)
+    "commission only": 0.0
+    "package execution (1/4 tick per leg)": 0.125
+    "half tick per leg": 0.25
+    "full tick per leg (default)": 0.5
+
+events:                         # annotated on time-series charts
+  "Mar-2020 Covid": "2020-03-16"
+  "Hikes start Mar-2022": "2022-03-16"
+  "Aug-2024 vol shock": "2024-08-05"
+  "First cut Sep-2024": "2024-09-18"
+  "2026 geopolitical shock": "2026-03-06"
+
+regimes:                        # labels for P&L by regime (inclusive date ranges)
+  - ["hiking", "2018-06-01", "2018-12-19"]
+  - ["hold", "2018-12-20", "2019-07-30"]
+  - ["cutting", "2019-07-31", "2020-03-15"]
+  - ["hold", "2020-03-16", "2022-03-15"]
+  - ["hiking", "2022-03-16", "2023-07-26"]
+  - ["hold", "2023-07-27", "2024-09-17"]
+  - ["cutting", "2024-09-18", "2025-12-31"]
+  - ["2026", "2026-01-01", "2026-12-31"]
+
+screen:
+  top_n: 10
+  families: [fly, dfly, spread3m, spread1y]
+
+example_structure: "FLY 5-6-7"  # the fly drawn in the worked-example chart
